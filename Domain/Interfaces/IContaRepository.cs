@@ -15,5 +15,6 @@ namespace Domain.Interfaces
         Task<Conta> GetByIdAsync(int id, string userId);
         Task UpdateAsync(Conta conta);
         Task<decimal> GetSaldoTotalAsync(string userId);
+        Task<Conta?> UpdateAsync(string userId, int contaId, Conta updateConta);
     }
 }
