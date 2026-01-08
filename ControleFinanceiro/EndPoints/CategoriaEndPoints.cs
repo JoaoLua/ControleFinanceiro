@@ -23,6 +23,23 @@ namespace ControleFinanceiro.EndPoints
                 return Results.Created($"/categorias/{response.Id}", response);
             })
             .WithName("CriarCategoria");
+            group.MapPut("/{categoriaId}", async (ClaimsPrincipal user, int categoriaId, CategoriaRequest request, UpdateCategoriaUseCase useCase) =>
+            {
+                var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (userId == null)
+                {
+                    return Results.Unauthorized();
+                }
+
+
+                var response = await useCase.Execute(userId, categoriaId, request);
+
+                return Results.Ok(response);
+            })
+            .RequireAuthorization()
+            .WithName("AtualizarCategoria");
+
             group.MapGet("/", async (ClaimsPrincipal user, GetAllCategoriasUseCase useCase) =>
             {
                 var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);

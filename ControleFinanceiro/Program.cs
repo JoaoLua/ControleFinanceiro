@@ -9,6 +9,7 @@ using Infraestructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using QuestPDF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
 builder.Services.AddSingleton<IEmailSender<IdentityUser>, EmailSender>();
+
+QuestPDF.Settings.License = LicenseType.Community;
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -62,16 +65,20 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+
+
 //Categorias
 builder.Services.AddScoped<AddCategoriaUseCase>();
 builder.Services.AddScoped<GetAllCategoriasUseCase>();
 builder.Services.AddScoped<DeleteCategoriaUseCase>();
+builder.Services.AddScoped<UpdateCategoriaUseCase>();
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 
 
 //Contas
 builder.Services.AddScoped<AddContaUseCase>();
 builder.Services.AddScoped<GetAllContasUseCase>();
+builder.Services.AddScoped<UpdateContaUseCase>();
 builder.Services.AddScoped<IContaRepository, ContaRepository>();
 
 //Transacoes
@@ -106,6 +113,7 @@ CategoriaEndPoints.MapCategoriaEndPoints(app);
 ContaEndPoints.MapContaEndPoints(app);
 TransacaoEndPoints.MapTransacaoEndPoints(app);
 DashBoardEndPoints.MapDashBoardEndPoints(app);
+RelatoriosEndPoints.MapRelatoriosEndPoints(app);
 
 app.MapControllers();
 

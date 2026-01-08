@@ -4,6 +4,7 @@ using Infraestructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,6 +52,22 @@ namespace Infraestructure.Repositories
                 .Where(c => c.UserId == userId)
                 .SumAsync(c => c.Saldo);
              
+        }
+        public async Task<Conta?> UpdateAsync(string userId, int contaId, Conta updateConta)
+        {
+            var conta = await _context.Contas.FirstOrDefaultAsync(c => c.Id == contaId && c.UserId == userId);
+
+            if (conta is null)
+                throw new KeyNotFoundException("Conta não coincide com usuario");
+
+            conta.Saldo = updateConta.Saldo;
+            conta.Nome = updateConta.Nome;
+
+            _context.Contas.Update(conta);
+            await _context.SaveChangesAsync();
+
+            return conta;
+
         }
     }
 }

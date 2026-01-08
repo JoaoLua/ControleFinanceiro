@@ -42,7 +42,7 @@ namespace Infraestructure.Repositories
 
             if (data.HasValue)
             {
-                query = query.Where(t => t.Data == data.Value);
+                query = query.Where(t => t.Data.Date == data.Value.Date);
             }
 
             if (contaId.HasValue)
@@ -64,11 +64,14 @@ namespace Infraestructure.Repositories
             DateTime dataInicio,
             DateTime dataFim)
         {
+
+            var dataFimAjustada = dataFim.Date.AddDays(1).AddTicks(-1);
             return await _context.Transacoes
-                                 .Where(t => t.UserId == userId &&
-                                             t.Tipo == tipo &&
-                                             t.Data >= dataInicio && t.Data <= dataFim)
-                                 .SumAsync(t => t.Valor);
+                                    .Where(t => t.UserId == userId &&
+                                        t.Tipo == tipo &&
+                                        t.Data >= dataInicio &&
+                                        t.Data <= dataFimAjustada)
+                                        .SumAsync(t => t.Valor);
         }
 
         public async Task<IEnumerable<Transacao>> GetRecentesAsync(

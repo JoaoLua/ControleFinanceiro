@@ -24,6 +24,18 @@ namespace ControleFinanceiro.EndPoints
                 return Results.Created($"/contas/{novaConta.Id}", novaConta);
             });
 
+            group.MapPut("/{id}", async (ClaimsPrincipal user, int id, ContaRequest request, UpdateContaUseCase useCase) =>
+            {
+                var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+                var response = await useCase.Execute(userId, id, request); 
+                
+                if (response is null)
+                    return Results.NotFound(new { message = "Conta não encontrada." });
+
+                return Results.Ok(response);
+            })
+            .WithName("AtualizarConta");
+
             group.MapGet("/", async (ClaimsPrincipal user, GetAllContasUseCase useCase) =>
             {
                 var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);

@@ -25,7 +25,7 @@ namespace Application.UseCases.DashBoardUseCases
             var fimMes = inicioMes.AddMonths(1).AddDays(-1);
 
             var receita = await _transacaoRepository.GetSomaPorPeriodoAsync(userId, TipoTransacao.Receita, inicioMes, fimMes); 
-            var despesa = await _transacaoRepository.GetSomaPorPeriodoAsync(userId, TipoTransacao.Receita, inicioMes, fimMes);
+            var despesa = await _transacaoRepository.GetSomaPorPeriodoAsync(userId, TipoTransacao.Despesa, inicioMes, fimMes);
             var saldoTotal = await _contaRepository.GetSaldoTotalAsync(userId);
 
             return new ResumoFinanceiroResponse
